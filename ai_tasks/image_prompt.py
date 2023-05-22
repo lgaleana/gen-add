@@ -7,7 +7,6 @@ Here is the text from a website:
 {text}
 
 Generate a prompt to send to a generative AI assistant that will create an image for it.
-Don't include people or text.
 """
 
 
