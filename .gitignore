@@ -2,3 +2,4 @@ venv
 .vscode
 logs
 .env
+google-vision.json
