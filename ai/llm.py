@@ -2,6 +2,9 @@ import os
 from typing import Any, Dict, List, Optional
 
 import openai
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 openai.api_key = os.environ["OPENAI_KEY_PERSONAL"]
