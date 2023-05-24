@@ -35,8 +35,8 @@ def run():
     summary = summarize_text(text)
     print_assistant(summary)
     # Pick an image and generate a headline
-    # headlines = get_headline_for_image(summary, dimensions, image_info)
-    # print_assistant(headlines)
+    headlines = get_headline_for_image(summary, dimensions, image_info)
+    print_assistant(headlines)
     # Generate a headline and an image
     headline_prompt = generate_headline_and_prompt(summary, dimensions)
     print_system("Generating AI images...")
