@@ -6,11 +6,11 @@ from utils.io import print_system
 
 
 PROMPT = """
-Your goal is to find a set of the best images that can be used as ads for a website.
-The ads have to be in certain dimensions. The images can be edited or cut.
-So you must consider which images would be better suited to fit those dimensions after editing.
+Your goal is to find the best image that can be used as an ad for a website.
+The ad must have certain dimensions but the image can be edited or cut.
+So you must consider an image that is suited to fit those dimensions after editing.
 You should consider the content of the website. The content of the images has been labeled.
-You will create a headline for each ad.
+You will create a headline for the ad.
 
 Summary of the website:
 {summary}
@@ -18,26 +18,25 @@ Summary of the website:
 Image urls, with labels and dimensions:
 {images}
 
-Dimensions for the ads: {dimensions}
+Dimensions for the ad: {dimensions}.
 
-Use the folliowing format. Each target dimension must be represented.
+Use the folliowing format.
 
 Why the image was chosen:
 Url:
 Headline:
-Image dimensions:
-Target dimensions: It can be more than one
+Original dimensions:
 """
 
 
 def get_headlines_for_images(
-    summary: str, dimensions: List[str], image_labels: List[Dict]
+    summary: str, dimensions: str, image_labels: List[Dict]
 ) -> str:
-    print_system("Generating headlines for images...")
+    print_system("Generating ad from images...")
     instructions = PROMPT.format(
         summary=summary,
         images=json.dumps(image_labels, indent=2),
         dimensions=dimensions,
     )
     messages = [{"role": "user", "content": instructions}]
-    return llm.next(messages, temperature=0)
+    return llm.next(messages)

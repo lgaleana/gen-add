@@ -14,4 +14,4 @@ def summarize_text(text: str) -> str:
     print_system("Summarizing text...")
     instructions = PROMPT.format(text=text)
     messages = [{"role": "user", "content": instructions}]
-    return llm.next(messages, temperature=0.4)
+    return llm.next(messages)
