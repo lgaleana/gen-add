@@ -1,6 +1,3 @@
-import json
-from typing import Dict, List
-
 from ai import llm
 from utils.io import print_system
 
@@ -17,4 +14,4 @@ def summarize_text(text: str) -> str:
     print_system("Summarizing text...")
     instructions = PROMPT.format(text=text)
     messages = [{"role": "user", "content": instructions}]
-    return llm.next(messages)
+    return llm.next(messages, temperature=0.4)

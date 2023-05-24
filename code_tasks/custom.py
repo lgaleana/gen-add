@@ -24,6 +24,6 @@ def get_image_info(url: str) -> Dict:
     }
 
 
-def get_info_for_images(urls) -> List[Dict]:
+def run_parallel_jobs(job, inputs, max: int = 100) -> List[Dict]:
     with ThreadPoolExecutor() as executor:
-        return list(executor.map(get_image_info, urls))
+        return list(executor.map(job, inputs[:max]))
