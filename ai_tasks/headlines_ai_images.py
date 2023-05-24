@@ -7,11 +7,11 @@ from utils.io import print_system
 
 
 PROMPT = """
-Your goal is to create an ad for each of the following dimensions: {dimensions}.
-You will rely on an AI image generator to create the ads for you.
+Your goal is to create an ad with the following dimensions: {dimensions}.
+You will rely on an AI image generator to create an image for you.
 
-For each of the ad dimensions, create a prompt to be used by the AI image generator.
-Pick a dimension to map to from this list: 256x256, 512x512, 1024x1024.
+Create a prompt to be used by the AI image generator.
+Pick a dimension to map to from this list: 256x256, 512x512, 1024x1024. The AI image will have these dimensions.
 Create a headline.
 Consider that the headlines will be edited on top of the generated images.
 
@@ -20,20 +20,18 @@ Here is the summary of the website:
 
 Generate a JSON in the following format:
 ```
-[
-    {{
-        "ad_dimension":
-        "dimension_to_map":
-        "headline":
-        "prompt":
-    }}
-]
+{{
+    "ad_dimension":
+    "dimension_to_map":
+    "headline":
+    "prompt":
+}}
 ```
 """
 
 
-def generate_headlines(summary: str, dimensions: List[str]) -> List[Dict[str, str]]:
-    print_system("Generating headlines for website...")
+def generate_headline_and_prompt(summary: str, dimensions: str) -> Dict[str, str]:
+    print_system("Generating headline for website...")
     instructions = PROMPT.format(
         summary=summary,
         dimensions=dimensions,
@@ -42,8 +40,8 @@ def generate_headlines(summary: str, dimensions: List[str]) -> List[Dict[str, st
     return _parse_output(llm.next(messages, temperature=0))
 
 
-def _parse_output(assistant_message: str) -> List[Dict[str, str]]:
+def _parse_output(assistant_message: str) -> Dict[str, str]:
     # Might throw
-    match = re.search(r"(\[\s*{.*}\s*\])", assistant_message, re.DOTALL)
+    match = re.search("({.*})", assistant_message, re.DOTALL)
     json_request = match.group(0)  # type: ignore
     return json.loads(json_request)

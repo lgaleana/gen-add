@@ -2,8 +2,8 @@ from typing import Dict
 import json
 
 from ai import image
-from ai_tasks.headlines_for_images import get_headlines_for_images
-from ai_tasks.headlines_ai_images import generate_headlines
+from ai_tasks.headlines_for_images import get_headline_for_image
+from ai_tasks.headlines_ai_images import generate_headline_and_prompt
 from ai_tasks.text_summary import summarize_text
 from code_tasks.custom import get_image_info, run_parallel_jobs
 from code_tasks.images_in_url import get_images_from_url
@@ -34,17 +34,14 @@ def run():
     # AI tasks
     summary = summarize_text(text)
     print_assistant(summary)
-    headlines = get_headlines_for_images(summary, dimensions, image_info)
-    print_assistant(headlines)
-
-    # headlines_prompts = generate_headlines(summary, DIMENSIONS)
-    # print_system("Generating AI images...")
-    # run_parallel_jobs(gen_image, headlines_prompts)
-
-
-def gen_image(input: Dict[str, str]) -> None:
-    ai_image = image.urls(input["prompt"], size=input["dimension_to_map"])[0]
-    print_system(f"Prompt: {input['prompt']}")
-    print_assistant(input["ad_dimension"])
-    print_assistant(input["headline"])
+    # Pick an image and generate a headline
+    # headlines = get_headline_for_image(summary, dimensions, image_info)
+    # print_assistant(headlines)
+    # Generate a headline and an image
+    headline_prompt = generate_headline_and_prompt(summary, dimensions)
+    print_system("Generating AI images...")
+    ai_image = image.urls(headline_prompt["prompt"], size=headline_prompt["dimension_to_map"])[0]
+    print_system(f"Prompt: {headline_prompt['prompt']}")
+    print_assistant(headline_prompt["ad_dimension"])
+    print_assistant(headline_prompt["headline"])
     print_assistant(ai_image)

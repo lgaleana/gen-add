@@ -29,7 +29,7 @@ Original dimensions:
 """
 
 
-def get_headlines_for_images(
+def get_headline_for_image(
     summary: str, dimensions: str, image_labels: List[Dict]
 ) -> str:
     print_system("Generating ad from images...")
