@@ -1,3 +1,7 @@
+"""
+ChatGPT-4 prompt: write a python function that given an image url gets its dimensions
+"""
+
 from PIL import Image
 import requests
 from io import BytesIO

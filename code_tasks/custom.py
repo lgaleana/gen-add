@@ -1,3 +1,9 @@
+"""
+Code here was custom written, but based on ChatGPT-4.
+Example prompt: write a python function that uses an api that given an image returns a text summary of it
+"""
+
+
 from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List
 
