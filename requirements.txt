@@ -1,4 +1,7 @@
 beautifulsoup4
+gradio
 openai
+pillow
+protobuf
 python-dotenv
 requests==2.28.1
