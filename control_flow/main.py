@@ -35,7 +35,7 @@ def run():
     print_assistant(headlines)
 
     headlines_prompts = generate_headlines(summary, DIMENSIONS)
-    print_system("Getting AI images...")
+    print_system("Generating AI images...")
     run_parallel_jobs(gen_image, headlines_prompts)
 
 
