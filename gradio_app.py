@@ -3,7 +3,6 @@ import gradio as gr
 import ai_tasks
 import code_tasks
 import custom_code
-from control_flow.main import _run
 
 
 def open__get_text_from_url() -> str:
@@ -30,6 +29,30 @@ def get_text_and_images_from_url(url):
 
 def get_images_analysis(images):
     return custom_code.image_analysis.analyze_images(eval(images))
+
+
+def summarize_text(prompt, url, dimensions, text, images, image_infos, summary):
+    return ai_tasks.text_summary._summarize_text(
+        prompt,
+        url=url,
+        dimensions=dimensions,
+        text=text,
+        images=images,
+        image_infos=image_infos,
+        summary=summary,
+    )
+
+
+def get_headline_for_image(prompt, url, dimensions, text, images, image_infos, summary):
+    return ai_tasks.headlines_for_images._get_headline_for_image(
+        prompt,
+        url=url,
+        dimensions=dimensions,
+        text=text,
+        images=images,
+        image_infos=image_infos,
+        summary=summary,
+    )
 
 
 with gr.Blocks() as demo:
@@ -91,7 +114,7 @@ with gr.Blocks() as demo:
         gr.Markdown("AI task: summarize text")
         with gr.Row():
             with gr.Column():
-                gr.Textbox(
+                summary_prompt = gr.Textbox(
                     ai_tasks.text_summary.PROMPT,
                     label="Instructions",
                     interactive=True,
@@ -105,7 +128,7 @@ with gr.Blocks() as demo:
         gr.Markdown("AI task: generate headline for image")
         with gr.Row():
             with gr.Column():
-                gr.Textbox(
+                headline_prompt = gr.Textbox(
                     ai_tasks.headlines_for_images.PROMPT,
                     label="Instructions",
                     interactive=True,
@@ -118,6 +141,8 @@ with gr.Blocks() as demo:
                     interactive=False,
                 )
 
+    vars_ = [url, dimensions, text, images, image_infos, summary]
+
     execute.click(
         get_text_and_images_from_url, inputs=[url], outputs=[text, images]
     ).success(
@@ -125,10 +150,12 @@ with gr.Blocks() as demo:
         inputs=[images],
         outputs=[image_infos],
     ).success(
-        ai_tasks.text_summary.summarize_text, inputs=[text], outputs=[summary]
+        summarize_text,
+        inputs=[summary_prompt] + vars_,  # type: ignore
+        outputs=[summary],
     ).success(
-        ai_tasks.headlines_for_images.get_headline_for_image,
-        inputs=[summary, dimensions, image_infos],
+        get_headline_for_image,
+        inputs=[headline_prompt] + vars_,  # type: ignore
         outputs=[headline],
     )
 

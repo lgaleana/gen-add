@@ -11,7 +11,11 @@ What is this website about?
 
 
 def summarize_text(text: str) -> str:
+    return _summarize_text(PROMPT, text=text)
+
+
+def _summarize_text(prompt: str, **kwargs) -> str:
     print_system("Summarizing text...")
-    instructions = PROMPT.format(text=text)
+    instructions = prompt.format(**kwargs)
     messages = [{"role": "user", "content": instructions}]
     return llm.next(messages)

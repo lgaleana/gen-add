@@ -1,4 +1,3 @@
-import json
 from typing import Dict, List
 
 from ai import llm
@@ -32,11 +31,13 @@ Original dimensions:
 def get_headline_for_image(
     summary: str, dimensions: str, image_infos: List[Dict]
 ) -> str:
-    print_system("Generating ad from images...")
-    instructions = PROMPT.format(
-        summary=summary,
-        image_infos=json.dumps(image_infos, indent=2),
-        dimensions=dimensions,
+    return _get_headline_for_image(
+        PROMPT, summary=summary, dimensions=dimensions, image_infos=image_infos
     )
+
+
+def _get_headline_for_image(prompt: str, **kwargs) -> str:
+    print_system("Generating ad from images...")
+    instructions = prompt.format(**kwargs)
     messages = [{"role": "user", "content": instructions}]
     return llm.next(messages)
