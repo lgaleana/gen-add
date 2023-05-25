@@ -69,6 +69,7 @@ with gr.Blocks() as demo:
         <br> A sequence of code and AI tasks will scrape the website and find an image that best fits those dimensions.
         <br> It's your job to edit the image.
         <br> A headline for your ad will also be generated, along with an explanation of why the image was chosen.
+        <br> Play around with the AI tasks to get different results.
         """
     )
 
