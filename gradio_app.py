@@ -272,7 +272,7 @@ with gr.Blocks() as demo:
         get_headline_for_image,
         inputs=[headline_prompt] + vars_,  # type: ignore
         outputs=[headline, headline_image],
-    ).success(
+    ).then(
         get_headline_and_prompt,
         inputs=[ai_prompt_prompt] + vars_,  # type: ignore
         outputs=[
