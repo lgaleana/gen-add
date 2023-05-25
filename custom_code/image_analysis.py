@@ -4,22 +4,29 @@ Example prompt: write a python function that uses an api that given an image ret
 """
 
 
+import json
+import os
 from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List
 
 from dotenv import load_dotenv
 from google.cloud import vision
+from google.oauth2 import service_account
 
 from code_tasks.image_dimensions import get_image_dimensions
 
 load_dotenv()
+
+VISION_CREDENTIALS = service_account.Credentials.from_service_account_info(
+    json.loads(os.environ["GOOGLE_APPLICATION_KEY"])
+)
 
 
 def analyze_images(images) -> List[Dict]:
     max = 20
 
     def get_image_info(image_url: str) -> Dict:
-        client = vision.ImageAnnotatorClient()
+        client = vision.ImageAnnotatorClient(credentials=VISION_CREDENTIALS)
         image = vision.Image()
         image.source.image_uri = image_url  # type: ignore
 
