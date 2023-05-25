@@ -26,7 +26,7 @@ Use the following format.
 ```
 {{
     "reason": Why the image was chosen
-    "url":
+    "image_url":
     "headline"":
     "image_dimensions": The dimensions of the original image
 }}

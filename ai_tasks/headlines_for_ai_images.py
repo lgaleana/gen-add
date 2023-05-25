@@ -24,24 +24,18 @@ Generate a JSON in the following format:
     "ad_dimension":
     "dimension_to_map":
     "headline":
-    "prompt":
+    "ai_prompt":
 }}
 ```
 """
 
 
-def generate_headline_and_prompt(summary: str, dimensions: str) -> Dict[str, str]:
+def generate_headline_and_prompt(summary: str, dimensions: str) -> str:
+    return _generate_headline_and_prompt(PROMPT, summary=summary, dimensions=dimensions)
+
+
+def _generate_headline_and_prompt(prompt: str, **kwargs) -> str:
     print_system("Generating headline for website...")
-    instructions = PROMPT.format(
-        summary=summary,
-        dimensions=dimensions,
-    )
+    instructions = prompt.format(**kwargs)
     messages = [{"role": "user", "content": instructions}]
-    return _parse_output(llm.next(messages, temperature=0))
-
-
-def _parse_output(assistant_message: str) -> Dict[str, str]:
-    # Might throw
-    match = re.search("({.*})", assistant_message, re.DOTALL)
-    json_request = match.group(0)  # type: ignore
-    return json.loads(json_request)
+    return llm.next(messages, temperature=0)

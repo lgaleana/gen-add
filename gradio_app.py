@@ -1,5 +1,6 @@
 import gradio as gr
 
+import ai
 import ai_tasks
 import code_tasks
 import custom_code
@@ -31,7 +32,16 @@ def get_images_analysis(images):
     return custom_code.image_analysis.analyze_images(eval(images))
 
 
-def summarize_text(prompt, url, dimensions, text, images, image_infos, summary):
+def summarize_text(
+    prompt,
+    url,
+    dimensions,
+    text,
+    images,
+    image_infos,
+    summary,
+    headline,
+):
     return ai_tasks.text_summary._summarize_text(
         prompt,
         url=url,
@@ -40,11 +50,23 @@ def summarize_text(prompt, url, dimensions, text, images, image_infos, summary):
         images=images,
         image_infos=image_infos,
         summary=summary,
+        headline=headline,
     )
 
 
-def get_headline_for_image(prompt, url, dimensions, text, images, image_infos, summary):
-    return ai_tasks.headlines_for_images._get_headline_for_image(
+def get_headline_for_image(
+    prompt,
+    url,
+    dimensions,
+    text,
+    images,
+    image_infos,
+    summary,
+    headline,
+):
+    import json
+
+    output = ai_tasks.headlines_for_images._get_headline_for_image(
         prompt,
         url=url,
         dimensions=dimensions,
@@ -52,13 +74,45 @@ def get_headline_for_image(prompt, url, dimensions, text, images, image_infos, s
         images=images,
         image_infos=image_infos,
         summary=summary,
+        headline=headline,
+    )
+    return output, json.loads(output)["image_url"]
+
+
+def get_headline_and_prompt(
+    prompt,
+    url,
+    dimensions,
+    text,
+    images,
+    image_infos,
+    summary,
+    headline,
+):
+    import json
+
+    output = ai_tasks.headlines_for_ai_images._generate_headline_and_prompt(
+        prompt,
+        url=url,
+        dimensions=dimensions,
+        text=text,
+        images=images,
+        image_infos=image_infos,
+        summary=summary,
+        headline=headline,
+    )
+    output_dict = json.loads(output)
+    return (
+        output,
+        output_dict["ai_prompt"],
+        output_dict["ai_prompt"],
+        output_dict["dimension_to_map"],
+        output_dict["dimension_to_map"],
     )
 
 
-def set_image(headline):
-    import json
-
-    return json.loads(headline)["url"]
+def generate_image(prompt, dimensions):
+    return ai.image.urls(prompt, 1, dimensions)[0]
 
 
 with gr.Blocks() as demo:
@@ -127,7 +181,7 @@ with gr.Blocks() as demo:
             with gr.Column():
                 summary_prompt = gr.Textbox(
                     ai_tasks.text_summary.PROMPT,
-                    label="Instructions",
+                    label="Instructions:",
                     interactive=True,
                 )
             with gr.Column():
@@ -141,7 +195,7 @@ with gr.Blocks() as demo:
             with gr.Column():
                 headline_prompt = gr.Textbox(
                     ai_tasks.headlines_for_images.PROMPT,
-                    label="Instructions",
+                    label="Instructions:",
                     interactive=True,
                     lines=20,
                 )
@@ -152,9 +206,58 @@ with gr.Blocks() as demo:
                     max_lines=10,
                     interactive=False,
                 )
-                headline_image = gr.Image()
+                headline_image = gr.Image(interactive=False)
 
-    vars_ = [url, dimensions, text, images, image_infos, summary]
+    with gr.Box():
+        gr.Markdown("AI task: generate headline and prompt for image")
+        with gr.Row():
+            with gr.Column():
+                ai_prompt_prompt = gr.Textbox(
+                    ai_tasks.headlines_for_ai_images.PROMPT,
+                    label="Instructions:",
+                    interactive=True,
+                )
+            with gr.Column():
+                headline_and_prompt = gr.Textbox(
+                    label="Output: {headline_prompt}",
+                    lines=20,
+                    max_lines=20,
+                    interactive=False,
+                )
+                dimension_to_map = gr.Textbox(
+                    label="Output: {dimension_to_map}",
+                    interactive=False,
+                )
+                ai_prompt = gr.Textbox(
+                    label="Output: {ai_prompt}",
+                    interactive=False,
+                )
+
+    with gr.Box():
+        gr.Markdown("AI task: generate image")
+        with gr.Row():
+            with gr.Column():
+                with gr.Box():
+                    ai_image_prompt = gr.Textbox(
+                        label="Instructions: {ai_prompt}",
+                        interactive=False,
+                    )
+                    image_dimensions = gr.Textbox(
+                        label="Input: {dimension_to_map}",
+                        interactive=False,
+                    )
+            with gr.Column():
+                ai_image = gr.Image()
+
+    vars_ = [
+        url,
+        dimensions,
+        text,
+        images,
+        image_infos,
+        summary,
+        headline,
+    ]
 
     execute.click(
         get_text_and_images_from_url, inputs=[url], outputs=[text, images]
@@ -169,11 +272,19 @@ with gr.Blocks() as demo:
     ).success(
         get_headline_for_image,
         inputs=[headline_prompt] + vars_,  # type: ignore
-        outputs=[headline],
+        outputs=[headline, headline_image],
     ).success(
-        set_image,
-        inputs=[headline],
-        outputs=[headline_image],
+        get_headline_and_prompt,
+        inputs=[ai_prompt_prompt] + vars_,  # type: ignore
+        outputs=[
+            headline_and_prompt,
+            ai_prompt,
+            ai_image_prompt,
+            dimension_to_map,
+            image_dimensions,
+        ],
+    ).success(
+        generate_image, inputs=[ai_image_prompt, image_dimensions], outputs=[ai_image]
     )
 
 demo.launch()
