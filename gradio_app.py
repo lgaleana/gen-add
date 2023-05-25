@@ -237,15 +237,14 @@ with gr.Blocks() as demo:
         gr.Markdown("AI task: generate image")
         with gr.Row():
             with gr.Column():
-                with gr.Box():
-                    ai_image_prompt = gr.Textbox(
-                        label="Instructions: {ai_prompt}",
-                        interactive=False,
-                    )
-                    image_dimensions = gr.Textbox(
-                        label="Input: {dimension_to_map}",
-                        interactive=False,
-                    )
+                ai_image_prompt = gr.Textbox(
+                    label="Instructions: {ai_prompt}",
+                    interactive=False,
+                )
+                image_dimensions = gr.Textbox(
+                    label="Input: {dimension_to_map}",
+                    interactive=False,
+                )
             with gr.Column():
                 ai_image = gr.Image()
 
