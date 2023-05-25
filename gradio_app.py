@@ -123,7 +123,7 @@ with gr.Blocks() as demo:
         <br> A sequence of code and AI tasks will scrape the website and find an image that best fits those dimensions. They will also generate an AI image.
         <br> It's your job to edit either of those images.
         <br> A headline for your ad will also be generated.
-        <br> Play around with the AI tasks to get different results. Text inbetween {} are variables that you have access to.
+        <br> Play around with the AI tasks to get different results. Text in between {} are variables that you have access to.
         """
     )
 
