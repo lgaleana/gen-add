@@ -220,8 +220,8 @@ with gr.Blocks() as demo:
             with gr.Column():
                 headline_and_prompt = gr.Textbox(
                     label="Output: {headline_prompt}",
-                    lines=20,
-                    max_lines=20,
+                    lines=10,
+                    max_lines=10,
                     interactive=False,
                 )
                 dimension_to_map = gr.Textbox(
