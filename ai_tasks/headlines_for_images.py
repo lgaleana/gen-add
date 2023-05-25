@@ -16,11 +16,11 @@ Summary of the website:
 {summary}
 
 Image urls, with labels and dimensions:
-{images}
+{image_infos}
 
 Dimensions for the ad: {dimensions}.
 
-Use the folliowing format.
+Use the following format.
 
 Why the image was chosen:
 Url:
@@ -30,12 +30,12 @@ Original dimensions:
 
 
 def get_headline_for_image(
-    summary: str, dimensions: str, image_labels: List[Dict]
+    summary: str, dimensions: str, image_infos: List[Dict]
 ) -> str:
     print_system("Generating ad from images...")
     instructions = PROMPT.format(
         summary=summary,
-        images=json.dumps(image_labels, indent=2),
+        image_infos=json.dumps(image_infos, indent=2),
         dimensions=dimensions,
     )
     messages = [{"role": "user", "content": instructions}]

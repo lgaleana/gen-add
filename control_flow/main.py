@@ -1,13 +1,10 @@
-from typing import Dict
-import json
-
 from ai import image
+from ai_tasks.headlines_for_ai_images import generate_headline_and_prompt
 from ai_tasks.headlines_for_images import get_headline_for_image
-from ai_tasks.headlines_ai_images import generate_headline_and_prompt
 from ai_tasks.text_summary import summarize_text
-from code_tasks.custom import get_image_info, run_parallel_jobs
 from code_tasks.images_in_url import get_images_from_url
 from code_tasks.text_in_url import get_text_from_url
+from custom_code.image_analysis import analyze_images
 from utils.io import print_assistant, print_system, user_input
 
 
@@ -28,19 +25,20 @@ def run():
     print_system("Getting URL data...")
     text = get_text_from_url(url)
     images = get_images_from_url(url)
-    image_info = run_parallel_jobs(get_image_info, images, max=20)
-    print_system(json.dumps(image_info, indent=2))
+    image_infos = analyze_images(images)
 
     # AI tasks
     summary = summarize_text(text)
     print_assistant(summary)
     # Pick an image and generate a headline
-    headlines = get_headline_for_image(summary, dimensions, image_info)
-    print_assistant(headlines)
+    headline = get_headline_for_image(summary, dimensions, image_infos)
+    print_assistant(headline)
     # Generate a headline and an image
     headline_prompt = generate_headline_and_prompt(summary, dimensions)
     print_system("Generating AI images...")
-    ai_image = image.urls(headline_prompt["prompt"], size=headline_prompt["dimension_to_map"])[0]
+    ai_image = image.urls(
+        headline_prompt["prompt"], size=headline_prompt["dimension_to_map"]
+    )[0]
     print_system(f"Prompt: {headline_prompt['prompt']}")
     print_assistant(headline_prompt["ad_dimension"])
     print_assistant(headline_prompt["headline"])
