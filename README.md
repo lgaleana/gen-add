@@ -1,5 +1,10 @@
 ---
-title: {{Toolkit: Ads generation}}
+title: Toolkit ads generator
+emoji: 😎
+colorFrom: red
+colorTo: red
+sdk: gradio
+sdk_version: 3.32.0
 app_file: gradio_app.py
 pinned: false
 ---
