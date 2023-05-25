@@ -28,7 +28,7 @@ Use the following format.
     "reason": Why the image was chosen
     "url":
     "headline"":
-    "original_domensions": The image's dimensions
+    "image_dimensions": The dimensions of the original image
 }}
 ```
 """

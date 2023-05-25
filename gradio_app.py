@@ -65,10 +65,12 @@ with gr.Blocks() as demo:
     gr.Markdown(
         """
         ## Scrape a website and get an ad
-        Enter an url and the dimensions for an image (eg, 300x600) and get an image from the website and the headline for an ad.
+        Enter an url and the dimensions for an image (eg, 300x600).
+        <br> A sequence of code and AI tasks will scrape the website and find an image that best fits those dimensions.
+        <br> It's your job to edit the image.
+        <br> A headline for your ad will also be generated, along with an explanation of why the image was chosen.
         """
     )
-    gr.Markdown("Edit the AI tasks at your convenience.")
 
     url = gr.Textbox(label="Input: {url}")
     dimensions = gr.Textbox(label="Input: {dimensions}")
