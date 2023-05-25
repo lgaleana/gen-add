@@ -55,12 +55,20 @@ def get_headline_for_image(prompt, url, dimensions, text, images, image_infos, s
     )
 
 
+def set_image(headline):
+    import json
+
+    return json.loads(headline)["url"]
+
+
 with gr.Blocks() as demo:
     gr.Markdown(
         """
-        ## Ad Generator
-        Enter an url and the dimensions for an image (eg, 300x600) and get the image and headline for an ad."""
+        ## Scrape a website and get an ad
+        Enter an url and the dimensions for an image (eg, 300x600) and get an image from the website and the headline for an ad.
+        """
     )
+    gr.Markdown("Edit the AI tasks at your convenience.")
 
     url = gr.Textbox(label="Input: {url}")
     dimensions = gr.Textbox(label="Input: {dimensions}")
@@ -132,14 +140,16 @@ with gr.Blocks() as demo:
                     ai_tasks.headlines_for_images.PROMPT,
                     label="Instructions",
                     interactive=True,
+                    lines=20,
                 )
             with gr.Column():
                 headline = gr.Textbox(
                     label="Output: {headline}",
-                    lines=20,
+                    lines=10,
                     max_lines=10,
                     interactive=False,
                 )
+                headline_image = gr.Image()
 
     vars_ = [url, dimensions, text, images, image_infos, summary]
 
@@ -157,6 +167,10 @@ with gr.Blocks() as demo:
         get_headline_for_image,
         inputs=[headline_prompt] + vars_,  # type: ignore
         outputs=[headline],
+    ).success(
+        set_image,
+        inputs=[headline],
+        outputs=[headline_image],
     )
 
 demo.launch()

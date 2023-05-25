@@ -1,3 +1,5 @@
+import json
+import re
 from typing import Dict, List
 
 from ai import llm
@@ -21,10 +23,14 @@ Dimensions for the ad: {dimensions}.
 
 Use the following format.
 
-Why the image was chosen:
-Url:
-Headline:
-Original dimensions:
+```
+{{
+    "reason": Why the image was chosen
+    "url":
+    "headline"":
+    "original_domensions": The image's dimensions
+}}
+```
 """
 
 
