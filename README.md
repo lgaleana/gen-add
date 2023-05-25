@@ -1,3 +1,9 @@
+---
+title: {{Toolkit: Ads generation}}
+app_file: gradio_app.py
+pinned: false
+---
+
 # Ads generation tool
 Give an URL, generate headlines and images for ads.
 
