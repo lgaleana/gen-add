@@ -1,5 +1,5 @@
 ---
-title: Toolkit: Ads generator
+title: Toolkit - Ads generator
 emoji: 😎
 colorFrom: red
 colorTo: red
