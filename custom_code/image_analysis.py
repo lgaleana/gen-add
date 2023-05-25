@@ -7,7 +7,7 @@ Example prompt: write a python function that uses an api that given an image ret
 import json
 import os
 from concurrent.futures import ThreadPoolExecutor
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from dotenv import load_dotenv
 from google.cloud import vision
@@ -25,19 +25,24 @@ VISION_CREDENTIALS = service_account.Credentials.from_service_account_info(
 def analyze_images(images) -> List[Dict]:
     max = 20
 
-    def get_image_info(image_url: str) -> Dict:
+    def get_image_info(image_url: str) -> Optional[Dict]:
         client = vision.ImageAnnotatorClient(credentials=VISION_CREDENTIALS)
         image = vision.Image()
         image.source.image_uri = image_url  # type: ignore
 
-        response = client.label_detection(image=image)  # type: ignore
-        labels = [label.description for label in response.label_annotations]
-        dimensions = get_image_dimensions(image_url)
-        return {
-            "url": image_url,
-            "labels": ", ".join(labels),
-            "dimensions": f"{dimensions[0]}x{dimensions[1]}",
-        }
+        try:
+            response = client.label_detection(image=image)  # type: ignore
+            labels = [label.description for label in response.label_annotations]
+            dimensions = get_image_dimensions(image_url)
+            return {
+                "url": image_url,
+                "labels": ", ".join(labels),
+                "dimensions": f"{dimensions[0]}x{dimensions[1]}",
+            }
+        except:
+            return None
 
     with ThreadPoolExecutor() as executor:
-        return list(executor.map(get_image_info, images[:max]))
+        images = executor.map(get_image_info, images[:max])
+
+    return [i for i in images if i]
