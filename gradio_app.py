@@ -121,7 +121,7 @@ with gr.Blocks() as demo:
         ## Scrape a website and get an ad
         Enter an url and the dimensions for an image (eg, 300x600).
         <br> A sequence of code and AI tasks will scrape the website and find an image that best fits those dimensions. They will also generate an AI image.
-        <br> It's your job to edit either of those images.
+        <br> It's your job to edit either of those images. If the image urls are invalid, the app will break.
         <br> A headline for your ad will also be generated.
         <br> Play around with the AI tasks to get different results. Text in between {} are variables that you have access to.
         """
